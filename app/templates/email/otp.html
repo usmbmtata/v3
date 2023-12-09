@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Josefin Sans', sans-serif;
+            background-color: #ffffff;
+            color: #626566;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .head {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            max-height: 100px;
+            background-color: #f0f8fc;
+            border-radius: 15px 15px 0 0;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .e-body {
+            margin-top: 20px;
+            padding: 20px;
+            font-size: 16px;
+            text-align: center;
+        }
+        footer {
+            background-color: #000000;
+            color: #ffffff;
+            text-align: center;
+            padding: 5px;
+            font-size: 12px;
+        }
+        .end-logo {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .end-logo img {
+            max-width: 100px;
+            height: auto;
+            filter: opacity(0.5);
+        }
+        .otp {
+            background-color: #e7e8e9;
+            padding: 40px;
+            margin-bottom: 20px;
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+            display: inline-block;
+            width: 100%;
+            max-width: 100px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body class="container" >
+    <div>
+        <div class="head">
+            <img src="https://vedaalay.com/wp-content/uploads/2023/04/vedw.png" alt="Vedalay Logo" style="max-width: 200px;">
+        </div>
+        <div class="e-body" style="text-align: left ">
+            <p ><strong>Dear {{ name }},</strong></p>
+            <p>Thank you so much for showing interest in Vedaalay.<br> Your Registration Number is <br> {{ reg_no }}</p>
+            <p>Your verification code to complete the registration process with Vedaalay is: </p><br>
+            <div class="otp">{{ otp }}<br></div>
+            <p>Please share this code with the authorised person to complete the registration process.</p>
+            <p>You will be charged {{ registration_fee }}</p>
+        </div>
+        <div class="end-logo">
+            <img src="http://vedaalay.com/wp-content/uploads/2023/04/cropped-We_page3_image.png" alt="Vedalay Logo">
+        </div>
+    </div>
+    <footer>
+        <p>&copy; {{ year }} Vedaalay. All rights reserved.</p>
+    </footer>
+</body>
+</html>

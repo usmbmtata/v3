@@ -1,0 +1,59 @@
+<!-- templates/auth/otp_workflow.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, user-scalable=no ">
+    <title>Verify OTP</title>
+    <!-- Include Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f0f8fc;
+            font-family: Arial, sans-serif;
+            color: #626566;
+            margin-top: 50px;
+            padding-left: 2em;
+            padding-right: 2em;
+            font-size: 18px;
+            line-height: 1.5;
+            text-align: center;
+        }
+        .otp-card {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+            border-radius: 15px;
+            transition: transform 1s;
+            border-color: chocolate;
+        }
+
+        .otp-card:hover {
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+            <!-- Card for verifying OTP -->
+            <div class="col-md-6 col-sm-12 mb-5 mt-5 offset-md-3 d-flex justify-content-center">
+                <div class="card otp-card p-3 m-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Verify OTP</h5>
+                        <p class="card-text">Enter the OTP below to verify your authentication access</p>
+                        <form action="{{ url_for('auth.verify_otp') }}" method="post" class="mb-3">
+                            <div class="form-group">
+                                <strong><label for="otp">Enter OTP:</label></strong>
+                                <input type="text" class="form-control" name="otp" maxlength="6" autocomplete="off" autofocus  required>
+                            </div>
+                            <button type="submit" class="btn btn-dark btn-block">Verify OTP</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Include Bootstrap JS and Popper.js -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.1/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

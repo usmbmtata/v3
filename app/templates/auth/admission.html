@@ -1,0 +1,50 @@
+{% extends   'base.html' %}
+{% block title %}Admission{% endblock %}
+{% block content %}
+
+
+<div class="container mt-5 p-5 bg-light rounded shadow mb-5">
+    <h1 class="text-center mb-5 mt-5 ">Admission Form</h1>
+
+    <form method="POST" action="{{ url_for('auth.admission') }}">
+        {{ form.hidden_tag() }}
+        <label class="form-label mb-1" for="date">Date:</label>
+        {{ form.date(class_="form-control mb-3") }}
+
+        <label class="form-label mb-1" for="name">Name:</label>
+        {{ form.name(class_="form-control mb-3" ) }}
+
+        <label class="form-label mb-1" for="course">Course:</label>
+        {{ form.course(class_="form-control mb-3") }}
+
+        <label class="form-label mb-1" for="contact">Contact Number:</label>
+        {{ form.contact(class_="form-control mb-3") }}
+
+        <label class="form-label mb-1" for="email">Email:</label>
+        {{ form.email(class_="form-control mb-3") }}
+
+        <label class="form-label mb-1" for="gender">Gender:</label>
+        {{ form.gender(class_="form-control mb-3") }}
+
+        <label class="form-label mb-1" for="registration_fee">Registration Fee Discount:</label>
+        {{ form.registration_fee(class_="form-control mb-3") }}
+
+        <label class="form-label mb-1" for="address">Address:</label>
+        {{ form.address(class_="form-control mb-3") }}
+
+        <label class="form-label mb-1" for="aadhar">Aadhaar Number:</label>
+        {{ form.aadhar(class_="form-control mb-3") }}
+
+        <label class="form-label mb-1" for="mode">Payment Mode:</label>
+        {{ form.mode(class_="form-control mb-3") }}
+
+        <label class="form-label mb-1" for="notice">Notification Mode:</label>
+        {{ form.notice(class_="form-control mb-3") }}
+
+        <label class="form-label mb-1" for="code">Code:</label>
+        {{ form.code(class_="form-control mb-3") }}
+        <hr>
+        {{ form.submit(class_ ="btn btn-dark mb-3" ) }}
+    </form>
+</div>
+{% endblock %}

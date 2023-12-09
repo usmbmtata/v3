@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login Form 2</title>
+    <style>
+        .btn{
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: none;
+            color: white;
+            background-color: green;
+            cursor: pointer;
+        }
+        </style>
+</head>
+<body>
+
+<h1>Login Form 2</h1>
+
+<form action="" method="post">
+    {{ form.hidden_tag() }}
+    <p>
+        {{ form.username.label }}<br>
+        {{ form.username(size=32) }}<br>
+        {% for error in form.username.errors %}
+        <span style="color: red;">[{{ error }}]</span>
+        {% endfor %}
+    </p>
+    <p>
+        {{ form.password.label }}<br>
+        {{ form.password(size=32) }}<br>
+        {% for error in form.password.errors %}
+        <span style="color: red;">[{{ error }}]</span>
+        {% endfor %}
+    </p>
+    <p>{{ form.submit(class_="btn" ) }}</p>
+</form>
+
+</body>
+</html>

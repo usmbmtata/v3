@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='img/logo.png') }}">
+        <title>Home V2</title>
+        <meta name="theme-color" content="#6383ff">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link href="https://getbootstrap.com/docs/5.3/assets/css/docs.css" rel="stylesheet">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.0-beta3/css/bootstrap.min.css">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Gochi+Hand&family=Tsukimi+Rounded:wght@500&display=swap" rel="stylesheet">
+        <style>
+            body{
+                font-family: Tsukimi Rounded, sans-serif;
+            }
+        </style>
+        <script type="text/javascript">
+            (function(c,l,a,r,i,t,y){
+                c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+                t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+                y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+            })(window, document, "clarity", "script", "jzla4hbc3m");
+        </script>
+    </head>
+    <body>
+        <div>
+        </div>
+        <div class="container text-center mt-5 mb-5 p-5">
+        <img src="{{ url_for('static', filename='img/index.svg') }}" alt="Site under development">
+        <div style="text-align: center;">
+            <h1>Vedaalay Is upgrading</h1>
+            <div class="text-center mt-5" >
+            <p>Vedaalay is upgrading and opting it to be a better Application. </p><br>
+            <p> Yes, We are upgrading to Better Technology from PHP to Python</p>
+            </div>
+            <div >
+                <img src="{{ url_for('static', filename='img/Python_logo_wordmark.png') }}" width="auto" height="100">
+            </div>
+            <div>
+                <a href="/login"> <button type="button" style="margin: 5em; scale: 1.5;" class="btn btn-dark shadow ">Login</button> </a>
+                <a href="/signup"> <button type="button" style="margin: 5em; scale: 1.5;" class="btn btn-dark shadow ">Sign up</button> </a>
+            </div>
+        </div>
+        </div>
+    </body>
+</html>

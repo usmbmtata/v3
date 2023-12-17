@@ -5,6 +5,7 @@ import logging
 from flask_mail import Mail
 from config import Config
 
+
 import datetime
 
 # Initialize SQLAlchemy for database connection
@@ -20,13 +21,16 @@ def create_app():
     sess.init_app(app)
     db.init_app(app)
 
+
     from app.views.auth import auth_bp
     from app.views.dashboard import dashboard_bp
     from app.views.index import index_bp
+    from app.views.fee_coll import fee_coll_bp
 
     # Register blueprints
     app.register_blueprint(auth_bp)
     app.register_blueprint(dashboard_bp)
     app.register_blueprint(index_bp)
+    app.register_blueprint(fee_coll_bp)
 
     return app

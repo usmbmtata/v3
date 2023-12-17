@@ -1,18 +1,48 @@
-
-from telegram import Bot
-from telegram.ext import Updater
+from flask import Flask, request
+from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
+from app.utils.telegram_utils import send_telegram_message
 from config import Config
 
-bot = Bot(token='telegram_bot')
+app = Flask(__name__)
 
-def send_custom_message(chat_id, message):
-    bot.send_message(chat_id=chat_id, text=message)
+bot = Updater(Config.telegram_bot)
+dispatcher = bot.dispatcher
 
-def run_bot():
-    updater = Updater(token='TELEGRAM_BOT', use_context=True)
-    dispatcher = updater.dispatcher
-    updater.start_polling()
-    updater.idle()
+
+def start_command(update, context):
+    chat_id = update.effective_chat.id
+    welcome_message = "Welcome to Vedaalay!\n\nType /otp to get a one-time OTP for communication.\nType /help for available commands."
+    send_telegram_message(chat_id, welcome_message)
+
+def otp_command(update, context):
+    chat_id = update.effective_chat.id
+    # Generate and send OTP using your logic
+    otp = chat_id
+    message = f"Your OTP to set Telegram as a communication mode is: {otp}"
+    send_telegram_message(chat_id, message)
+
+def last_payment_command(update, context):
+    chat_id = update.effective_chat.id
+    # Prompt user for input
+    send_telegram_message(chat_id, "Please provide your Registration Number or your Registered Contact Number:")
+
+def handle_payment_input(update, context):
+    chat_id = update.effective_chat.id
+    user_input = update.message.text
+    # Implement logic to fetch and send last payment details based on user input
+    # ...
+
+def stop_command(update, context):
+    chat_id = update.effective_chat.id
+    send_telegram_message(chat_id, "Goodbye!")
+
+def handle_text(update, context):
+    # Process text messages
+    chat_id = update.effective_chat.id
+    text = update.message.text
+    # Stop the bot
+    Updater.stop_polling()
 
 if __name__ == '__main__':
-    run_bot()
+    bot.start_polling()
+    app.run(debug=True)

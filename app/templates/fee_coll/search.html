@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block title %}Search Details{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h1 class="text-center mt-5 mb-5">Vedaalay Search</h1>
+            <form method="POST" action="{{ url_for('fee_coll.search') }}">
+                {{ form.hidden_tag() }}
+                <div class="input-group mb-3">
+
+                    {{ form.reg_no(class_="form-control mb-3") }}
+                    {{ form.submit(class_="btn btn-dark mb-3") }}
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

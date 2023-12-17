@@ -14,3 +14,5 @@ class Fee_Fare(db.Model):
     type_c1 = db.Column(db.Float)
     type_d1 = db.Column(db.Float)
     type_e1 = db.Column(db.Float)
+
+    

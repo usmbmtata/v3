@@ -118,7 +118,6 @@ def admission():
 
     if request.method == 'POST' and form.validate_on_submit():
         print('form errors', form.errors)
-        print('form validation done')
 
         name = form.name.data,
         course = form.course.data,
@@ -173,6 +172,7 @@ def admission():
         db.session.add(new_student)
         db.session.commit()
         username = session.get('username', None)
+        chat_id = code
 
         if form.notice.data == 'email':
             recipient_email = form.email.data
@@ -184,6 +184,7 @@ def admission():
                 return render_template('auth/student_verify_otp.html', otp=otp)
             else:
                 flash(f"Error sending email: {error_message}", 'error')
+
         elif form.notice.data == 'telegram':
             telegram_message = f"Thank You for your Interest in Vedaalay!\n" \
                             f"-------\n" \
@@ -193,7 +194,7 @@ def admission():
                             f"Registration Fee: {registration_fee}\n" \
                             f"we will be sending all the other details shortly\n" \
                             f"https://vedaalay.com/wp-content/uploads/2023/04/vedw.png/"
-            success = send_telegram_message(code, telegram_message)
+            success = send_telegram_message(chat_id, text=telegram_message)
             if not success:
                 flash('Error sending Telegram message', 'error')
         elif form.notice.data == 'whatsapp':

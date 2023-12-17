@@ -25,3 +25,13 @@ def send_otp_email(recipient_email, otp):
     except Exception as e:
         print(f"Error sending email: {e}")
         return False, str(e)
+
+
+def send_invoice_email(recipient_email, otp):
+    try:
+        subject = 'Verification Code For Registration'
+        template = 'email/otp.html'  # You need to create this template
+        return send_email(subject, [recipient_email], template, otp=otp)
+    except Exception as e:
+        print(f"Error sending email: {e}")
+        return False, str(e)

@@ -1,8 +1,6 @@
 {% extends   'base.html' %}
 {% block title %}Admission{% endblock %}
 {% block content %}
-
-
 <div class="container mt-5 p-5 bg-light rounded shadow mb-5">
     <h1 class="text-center mb-5 mt-5 ">Admission Form</h1>
 
@@ -44,7 +42,7 @@
         <label class="form-label mb-1" for="code">Code:</label>
         {{ form.code(class_="form-control mb-3") }}
         <hr>
-        {{ form.submit(class_ ="btn btn-dark mb-3" ) }}
+        {{ form.submit(class_ ="btn btn-dark mb-3", id="submitButton" ) }}
     </form>
 </div>
 {% endblock %}

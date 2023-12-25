@@ -2,7 +2,7 @@ from app import db
 
 class fee_coll(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    invoice_number = db.Column(db.String(15), unique=True, nullable=False)
+    invoice_number = db.Column(db.String(20), unique=True, nullable=False)
     reg_no = db.Column(db.String(10), db.ForeignKey('student.reg_no'))
     fee_time = db.Column(db.Date)
     payment_time = db.Column(db.Date)

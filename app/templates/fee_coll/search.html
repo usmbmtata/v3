@@ -3,14 +3,17 @@
 {% block content %}
 <div class="container">
     <div class="row">
-        <div class="col-md-12">
-            <h1 class="text-center mt-5 mb-5">Vedaalay Search</h1>
+        <div class="col-md-12 text-center">
+            <h1 class="mt-5 mb-5">I Am looking For</h1>
+        </div>
+        <div class="col-md-6 mx-auto">
             <form method="POST" action="{{ url_for('fee_coll.search') }}">
                 {{ form.hidden_tag() }}
                 <div class="input-group mb-3">
-
                     {{ form.reg_no(class_="form-control mb-3") }}
-                    {{ form.submit(class_="btn btn-dark mb-3") }}
+                    <div class="text-center">
+                        {{ form.submit(class_="btn btn-dark mb-3") }}
+                    </div>
                 </div>
             </form>
         </div>

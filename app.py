@@ -30,7 +30,7 @@ logging.basicConfig(
     datefmt='%Y-%m-%d %H:%M:%S'
 )
 '''
-
+ 
 '''login_manager = LoginManager(app)'''
 
 # Initialize Extensions 

@@ -1,38 +1,38 @@
-from app import db
-from app.models.fee_fare import Fee_Fare
+# Remove the import statement for the 'db' module
+
 from datetime import datetime
 
 
-def get_rate(type, date):
-    # Assuming date is a string in the format 'YYYY-MM-DD'
-    date = datetime.strptime(date, '%Y-%m-%d').date()
+def get_rate(type, date_str):
+    # Convert the input date string to a datetime object
+    input_date = datetime.strptime(date_str, '%Y-%m-%d')
+    print('input date', input_date)
+    print('type passed via get rate',type)
 
-    # Query the database for the rates
-    rates = Fee_Fare.query.filter(Fee_Fare.date <= date).order_by(Fee_Fare.date.desc()).first()
+    # Declare the value for each type
+    type_a = 400
+    type_b = 700
+    type_c = 1100
+    type_d = 1400
+    type_e = 400
+    type_a1 = 250
+    type_b1 = 400
+    type_c1 = 560
+    type_d1 = 700
+    type_e1 = 200
 
-    if rates is None:
-        return None
+    # Get the appropriate type column based on the input type
+    type_column = type
+    print('type column',type_column)
 
-    # Return the rate based on the type
-    if type == 'type_a':
-        return rates.type_a
-    elif type == 'type_b':
-        return rates.type_b
-    elif type == 'type_c':
-        return rates.type_c
-    elif type == 'type_d':
-        return rates.type_d
-    elif type == 'type_e':
-        return rates.type_e
-    elif type == 'type_a1':
-        return rates.type_a1
-    elif type == 'type_b1':
-        return rates.type_b1
-    elif type == 'type_c1':
-        return rates.type_c1
-    elif type == 'type_d1':
-        return rates.type_d1
-    elif type == 'type_e1':
-        return rates.type_e1
+    # Retrieve the rate based on the input type
+    rate = locals().get(type_column)
+
+    # Check if the fetched type matches the input type
+    if rate is not None:
+        print(rate)
+        return rate
     else:
+        print("Error: Invalid type.")
         return None
+

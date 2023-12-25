@@ -1,46 +1,64 @@
+<!-- search_result.html-->
 {% extends 'base.html' %}
-{% block title %}{{ student.name}}'s Fee Collection{% endblock %}
-{% block content %}
-  <h2 class="text-center">{{ student.name}}'s Fee Collection</h2>
-<div class="container-md col-md-6 offset-md-3 rounded shadow">
-  <div class="row card border-1 justify-content-center">
-    <h5 class="card-title text-center mt-3"> Reg<sup>n</sup> No: {{ student.reg_no }}</h5>
-  </div>
- <p class="text-left card-body">
-    <strong>Name:</strong> {{ student.name }}<br>
-    <strong>Registration Date:</strong> {{ student.reg_date }}<br>
-    <strong>Notice:</strong> {{ student.notice }}<br>
-    <strong>Email:</strong> {{ student.email }}<br>
-    <strong>Contact:</strong> {{ student.contact }}<br>
 
-    {% if fee %}
+{% block title %}
+  {{ student.name }}'s Fee Collection
+{% endblock %}
+
+{% block content %}
+  <h2 class="text-center">{{ student.name }}'s Fee Collection</h2>
+
+  <div class="container-md col-md-6 offset-md-3 rounded shadow" style="background-color: #fff; padding: 20px;">
+    <div class="row card border-1 justify-content-center" style="background-color: #333; color: #fff; padding: 10px;">
+      <h5 class="card-title text-center mt-3"> Reg<sup>n</sup> No: {{ student.reg_no }}</h5>
+    </div>
+
+    <p class="text-left card-body" style="color: #333;">
+      <strong>Name:</strong> {{ student.name }}<br>
+      <strong>Registration Date:</strong> {{ student.reg_date }}<br>
+      <strong>Notice:</strong> {{ student.notice }}<br>
+      <strong>Email:</strong> {{ student.email }}<br>
+      <strong>Contact:</strong> {{ student.contact }}<br>
+
+      {% if fee %}
         <strong>Last Invoice No:</strong> {{ fee.invoice_number }}<br>
         <strong>Last Invoice Date:</strong> {{ fee.fee_time }}<br>
         <strong>Last Invoice Pay date:</strong> {{ fee.payment_time }}<br>
-    {% else %}
+      {% else %}
         <strong>No fee data available for this student.</strong><br>
-    {% endif %}
-</p>
-    <p>
-        <form method="POST" action="{{ url_for('fee_coll.search', reg_no=student.reg_no) }}">
-                {{ form.hidden_tag() }}
-                <h2 class="mt-5 mb-3">Fee Collection Form</h2>
-                {{ fee_coll_form.date.label }}
-                {{ fee_coll_form.date }}
-                {{ fee_coll_form.month.label }}
-                {{ fee_coll_form.month }}
-                {{ fee_coll_form.type.label }}
-                {{ fee_coll_form.type }}
-                {{ fee_coll_form.mode.label }}
-                {{ fee_coll_form.mode }}
-                {{ fee_coll_form.slot.label }}
-                {{ fee_coll_form.slot }}
-
-                <button type="submit" class="btn btn-dark mt-3">Submit</button>
-            </form>
+      {% endif %}
     </p>
+    <h5 class="text-center">Fee Collection Form</h5>
 
-  <div class="row justify-content-center">
-</div>
-</div>
+    <form method="POST" action="{{ url_for('fee_coll.collect_fee', reg_no=student.reg_no) }}">
+      {{ form.hidden_tag() }}
+      <div class="row">
+        <div class="col-12 mb-3">
+          {{ form.date.label }}
+          {{ form.date }}
+        </div>
+        <div class="col-12 mb-3">
+          {{ form.month.label }}
+          {{ form.month }}
+        </div>
+        <div class="col-12 mb-3">
+          {{ form.type.label }}
+          {{ form.type }}
+        </div>
+        <div class="col-12 mb-3">
+          {{ form.mode.label }}
+          {{ form.mode }}
+        </div>
+        <div class="col-12 mb-3">
+          {{ form.slot.label }}
+          {{ form.slot }}
+        </div>
+      </div>
+    
+      <button type="submit" class="btn btn-dark mt-3">Submit</button>
+    </form>
+
+    <div class="row justify-content-center mb-5">
+    </div>
+  </div>
 {% endblock %}

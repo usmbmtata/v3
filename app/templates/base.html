@@ -105,7 +105,9 @@
 {% endwith %}
         </main>
     </div>
-    <footer class="text-center text-muted mt-5 p-3 bg-body-tertiary bg-opacity-75 fixed-bottom ">
+{% block content %}
+{% endblock %}
+    <footer class="text-center text-muted mt-5 p-3 bg-body-tertiary bg-opacity-75">
         &copy; Vedaalay.com by Bhaskar Mishra
     </footer>
     <script src="{{ url_for('static', filename='js/spinner.js') }}"></script>

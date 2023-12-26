@@ -2,63 +2,34 @@
 {% extends 'base.html' %}
 
 {% block title %}
-  {{ student.name }}'s Fee Collection
+  {{ student_data.name }}'s Fee Collection
 {% endblock %}
 
 {% block content %}
-  <h2 class="text-center">{{ student.name }}'s Fee Collection</h2>
+  <h2 class="text-center">{{ student_data.name }}'s Fee Collection</h2>
 
   <div class="container-md col-md-6 offset-md-3 rounded shadow" style="background-color: #fff; padding: 20px;">
     <div class="row card border-1 justify-content-center" style="background-color: #333; color: #fff; padding: 10px;">
-      <h5 class="card-title text-center mt-3"> Reg<sup>n</sup> No: {{ student.reg_no }}</h5>
+      <h5 class="card-title text-center mt-3"> Reg<sup>n</sup> No: {{ student_data.reg_no }}</h5>
     </div>
 
     <p class="text-left card-body" style="color: #333;">
-      <strong>Name:</strong> {{ student.name }}<br>
-      <strong>Registration Date:</strong> {{ student.reg_date }}<br>
-      <strong>Notice:</strong> {{ student.notice }}<br>
-      <strong>Email:</strong> {{ student.email }}<br>
-      <strong>Contact:</strong> {{ student.contact }}<br>
+      <strong>Name:</strong> {{ student_data.name }}<br>
+      <strong>Registration Date:</strong> {{ student_data.reg_date }}<br>
+      <strong>Notice:</strong> {{ student_data.notice }}<br>
+      <strong>Email:</strong> {{ student_data.email }}<br>
+      <strong>Contact:</strong> {{ student_data.contact }}<br>
 
-      {% if fee %}
-        <strong>Last Invoice No:</strong> {{ fee.invoice_number }}<br>
-        <strong>Last Invoice Date:</strong> {{ fee.fee_time }}<br>
-        <strong>Last Invoice Pay date:</strong> {{ fee.payment_time }}<br>
+      {% if fee_coll_data %}
+        <strong>Last Invoice No:</strong> {{ fee_coll_data.invoice_number }}<br>
+        <strong>Last Invoice Date:</strong> {{ fee_coll_data.fee_time }}<br>
+        <strong>Last Invoice Pay date:</strong> {{ fee_coll_data.payment_time }}<br>
       {% else %}
-        <strong>No fee data available for this student.</strong><br>
+        <strong>No fee_coll_data data available for this student_data.</strong><br>
       {% endif %}
     </p>
-    <h5 class="text-center">Fee Collection Form</h5>
-
-    <form method="POST" action="{{ url_for('fee_coll.collect_fee', reg_no=student.reg_no) }}">
-      {{ form.hidden_tag() }}
-      <div class="row">
-        <div class="col-12 mb-3">
-          {{ form.date.label }}
-          {{ form.date }}
-        </div>
-        <div class="col-12 mb-3">
-          {{ form.month.label }}
-          {{ form.month }}
-        </div>
-        <div class="col-12 mb-3">
-          {{ form.type.label }}
-          {{ form.type }}
-        </div>
-        <div class="col-12 mb-3">
-          {{ form.mode.label }}
-          {{ form.mode }}
-        </div>
-        <div class="col-12 mb-3">
-          {{ form.slot.label }}
-          {{ form.slot }}
-        </div>
-      </div>
-    
-      <button type="submit" class="btn btn-dark mt-3">Submit</button>
-    </form>
-
     <div class="row justify-content-center mb-5">
+      <a href="{{ url_for('fee_coll.collect_fee', reg_no=student_data.reg_no) }}" class="btn btn-success">Go to Fee Collection</a>
     </div>
   </div>
 {% endblock %}

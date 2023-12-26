@@ -42,7 +42,21 @@ def search_result(reg_no):
     # Fetch data from both tables
     student_data = student.query.filter_by(reg_no=reg_no).first()
     fee_coll_data = fee_coll.query.filter_by(reg_no=reg_no).first()
+    print(fee_coll_data)
+    print(student_data)
 
+    # Check if data exists for the given registration number
+    if not student_data:
+        flash('Student with registration number {} not found.'.format(reg_no), 'error')
+        return redirect(url_for('fee_coll.search'))
+
+    if not fee_coll_data:
+        flash('Fee collection data for student with registration number {} not found.'.format(reg_no), 'error')
+        return redirect(url_for('fee_coll.search'))
+    
+    # Render template with fetched data
+    return render_template('fee_coll/search_result.html', student_data=student_data, fee_coll_data=fee_coll_data)
+    '''
     if request.method == 'POST':
         fee_coll_form = FeeCollForm()
 
@@ -103,8 +117,10 @@ def search_result(reg_no):
         flash('Form validation failed. Please check your inputs and try again.', 'error')
 
     return render_template('fee_coll/search_result.html', student=student_data, reg_no=reg_no, fee=fee_coll_data, form=FeeCollForm)
+    '''
 
-@fee_coll_bp.route('/search_result/<reg_no>', methods=['POST'])
+
+@fee_coll_bp.route('/collect_fee/<reg_no>', methods=['POST', 'GET'])
 def collect_fee(reg_no):
     global fee_coll_data, student_data
     fee_coll_form = FeeCollForm()

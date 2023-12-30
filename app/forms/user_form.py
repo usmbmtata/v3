@@ -37,4 +37,3 @@ class FeeCollForm(FlaskForm):
     mode = SelectField('Mode', choices=[('cash', 'Cash'), ('online', 'Online')], validators=[DataRequired()])
     slot = SelectField('Slot', choices=[('morning', 'Morning'), ('afternoon', 'Afternoon'), ('evening', 'Evening'), ('night', 'Night'), ('reserved', 'Reserved')], validators=[DataRequired()])
     submit = SubmitField('Submit')
-

@@ -12,6 +12,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/base.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=Gochi+Hand&family=Tsukimi+Rounded:wght@500&display=swap" rel="stylesheet">
     <style>
       .art{
@@ -31,7 +32,7 @@ background: linear-gradient(144deg, rgb(104, 147, 240) 0%, rgb(8, 7, 92) 85%);
     <section class="h-100" style="background-color: #eee; font-family: 'Tsukimi Rounded', sans-serif;">
         <div class="container py-5 h-100">
             <div class="row d-flex justify-content-center align-items-center h-100">
-                    <div class="card w-75 text-black">
+                    <div class="card w-login text-black">
                                 <div class="card-body  p-md-5 mx-sm-4 mx-md-4">
                                     <div class="text-center">
                                         <img src="{{ url_for('static', filename='img/vedacom.png') }}" style="width: 185px;" alt="logo">

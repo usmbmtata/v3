@@ -1,13 +1,10 @@
-# Remove the import statement for the 'db' module
-
 from datetime import datetime
 
-
-def get_rate(type, date_str):
+def get_rate(fee_type, date_str):
     # Convert the input date string to a datetime object
     input_date = datetime.strptime(date_str, '%Y-%m-%d')
     print('input date', input_date)
-    print('type passed via get rate',type)
+    print('type passed via get rate', fee_type)
 
     # Declare the value for each type
     type_a = 400
@@ -22,8 +19,8 @@ def get_rate(type, date_str):
     type_e1 = 200
 
     # Get the appropriate type column based on the input type
-    type_column = type
-    print('type column',type_column)
+    type_column = fee_type
+    print('type column', type_column)
 
     # Retrieve the rate based on the input type
     rate = locals().get(type_column)
@@ -36,3 +33,6 @@ def get_rate(type, date_str):
         print("Error: Invalid type.")
         return None
 
+type = 'type_b'
+date_str = '2023-10-12'
+get_rate(type, date_str)

@@ -1,8 +1,9 @@
 from datetime import datetime
 
-def get_rate(fee_type, date_str):
+def get_rate(type, date_str):
     # Convert the input date string to a datetime object
-    input_date = datetime.strptime(date_str, '%Y-%m-%d')
+    input_date = date_str
+    fee_type = type
     print('input date', input_date)
     print('type passed via get rate', fee_type)
 
@@ -32,7 +33,3 @@ def get_rate(fee_type, date_str):
     else:
         print("Error: Invalid type.")
         return None
-
-type = 'type_b'
-date_str = '2023-10-12'
-get_rate(type, date_str)

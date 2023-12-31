@@ -77,39 +77,6 @@ def logout():
     return redirect(url_for('auth.login'))
 
 
-'''
-@auth_bp.route('/verify_otp', methods=['GET', 'POST'])
-def verify_otp():
-    if request.method == 'POST':
-        entered_otp = request.form.get('otp')
-        stored_otp = session.get('otp')
-
-
-        if entered_otp == stored_otp:
-            new_user = Admin(
-                name=session.get('name'),
-                username=session.get('username'),
-                password=session.get('hashed_password'),
-                role='staff',
-                chat_id='',
-                email=session.get('email')
-            ) # type: ignore
-            db.session.add(new_user)
-            db.session.commit()
-            session.clear()
-
-            success_message = 'Account created successfully!'
-            return redirect(url_for('auth.login'))
-
-        else:
-            error_message = 'OTP is not valid. Please try again.'
-            return render_template('auth/verify_otp.html', error=error_message)
-
-    # Handle GET request when the page is initially loaded
-    return render_template('auth/verify_otp.html')
-
-    '''
-
 
 @auth_bp.route('/admission', methods=['POST', 'GET'])
 def admission():
@@ -118,18 +85,17 @@ def admission():
 
     if request.method == 'POST' and form.validate_on_submit():
         print('form errors', form.errors)
-
-        name = form.name.data,
-        course = form.course.data,
-        contact = form.contact.data,
-        email = form.email.data,
-        gender = form.gender.data,
+        name = form.name.data
+        course = form.course.data
+        contact = form.contact.data
+        email = form.email.data
+        gender = form.gender.data
         registration_fee = 0 if form.registration_fee.data == 'yes' else 100
-        address = form.address.data,
+        address = form.address.data
         aadhar = hash_aadhaar_number(form.aadhar.data)
-        mode = form.mode.data,
-        notice = form.notice.data,
-        code = form.code.data,
+        mode = form.mode.data
+        notice = form.notice.data
+        code = form.code.data
         reg_date = form.date.data
         submission_time = datetime.now()
         pay_date = submission_time.date()
@@ -140,7 +106,6 @@ def admission():
         otp = generate_otp()
         # Send OTP via email
         send_otp_email(email, otp)
-        print('form errors', form.errors, 'OTP check', otp)
 
         new_student = student(
             name=name,
@@ -157,9 +122,7 @@ def admission():
             reg_date=reg_date,
             pay_date=pay_date,
             reg_no=new_registration_number
-        )
-
-        # type: ignore
+        ) # type: ignore
 
         session['admission'] = {
             'name': name,

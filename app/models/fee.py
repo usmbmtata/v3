@@ -6,7 +6,7 @@ class fee_coll(db.Model):
     reg_no = db.Column(db.String(10), db.ForeignKey('student.reg_no'))
     fee_time = db.Column(db.Date)
     payment_time = db.Column(db.Date)
-    username = db.Column(db.String(100), db.ForeignKey('admin.name'))
+    username = db.Column(db.String(100))
     name = db.Column(db.String(100))
     contact = db.Column(db.String(20))
     month = db.Column(db.String(20))

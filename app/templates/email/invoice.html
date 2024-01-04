@@ -1,7 +1,7 @@
 <html>
 	<head>
 		<meta charset="utf-8" />
-		<title>Thank You For your fee</title>
+		<title>Fee Received, Thank You</title>
 
 		<style>
 			.invoice-box {
@@ -117,8 +117,8 @@
 								</td>
 
 								<td>
-									Reg<sup>n</sup> No. <strong> ' . $regNumber . ' </strong><br>
-                        <span class="marginright">Reg date: ' . $old_reg_date .' </span><br>
+									Reg<sup>n</sup> No. <strong>{{reg_no}} </strong><br>
+                        <span class="marginright">Reg date: {{reg_date}} </span><br>
                         <a href="https://vedaalay.com">vedaalay.com</a>
 								</td>
 							</tr>
@@ -131,21 +131,20 @@
 						<table>
 							<tr>
 								<td>
-									<strong> ' . $name . ' </strong><br>
-									' . $address . ' <br>
+									<strong> {{name}} </strong><br>
+									{{address}} <br>
 								   Bhagalpur - Bihar<br>
-								   Phone: +91 ' . $contact . '<br>
-								   E-mail:' . $email . '
+								   Phone: +91 {{phone}}<br>
+								   E-mail: {{email}}
 								</td>
 
 								<td>
 									<p class="payment-info"><strong>Payment Details</strong></p>
-									<h7 class="marginright">Invoice No.: ' . $new_inv_number .'</h7><br>
-									<p>Payment Date: ' . $paymentDate . '<br>
-									Mode of pay<sup>t</sup>: ' . $mode . ' <br>
+									<h7 class="marginright">Invoice No.: {{invoice_no}}</h7><br>
+									<p>Payment Date: {{pay_date}}<br>
+									Mode of pay<sup>t</sup>: {{mode}} <br>
 									Ends on: ' . $end_date . '<br>
-									Slot: ' . $slots . '<br>
-									Seat no: ' . $seat . '
+									Slot: {{slot}}</p>
 								</td>
 							</tr>
 						</table>

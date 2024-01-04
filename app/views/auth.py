@@ -1,5 +1,3 @@
-import email
-from email import message
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session
 from flask_bcrypt import Bcrypt
 from app.models.admin import Admin
@@ -15,15 +13,13 @@ from app.utils.registration_utils import generate_registration_number
 from datetime import datetime, date
 from app.models.student import student
 from app.utils.whatsapp_utils import send_whatsapp_message
-from app.models.fee_fare import Fee_Fare
-from flask_wtf.csrf import CSRFProtect, generate_csrf
 
 auth_bp = Blueprint('auth', __name__)
 bcrypt = Bcrypt()
 
 # Set the maximum login attempts
 MAX_LOGIN_ATTEMPTS = 3
-
+ 
 
 @auth_bp.route('/login', methods=['GET', 'POST'])
 def login():
@@ -61,7 +57,7 @@ def login():
 
         session['username'] = username
         session.pop('login_attempts', None)  # Reset login attempts on successful login
-        flash('Login successful ! Welcome to Vedaalay', 'success')
+        flash('Login successful ! Welcome to Vedaalay', 'info')
         logging.info(f'User {username} logged in')
         return redirect( url_for('dashboard.dashboard') )
 
@@ -73,7 +69,7 @@ def login():
 def logout():
     # Remove the username from the session if it exists
     session.clear()
-
+    flash('You have been logged out.', 'info')
     return redirect(url_for('auth.login'))
 
 
@@ -83,101 +79,101 @@ def admission():
     username = session.get('username')
     form = admissionForm()
 
-    if request.method == 'POST' and form.validate_on_submit():
-        print('form errors', form.errors)
-        name = form.name.data
-        course = form.course.data
-        contact = form.contact.data
-        email = form.email.data
-        gender = form.gender.data
-        registration_fee = 0 if form.registration_fee.data == 'yes' else 100
-        address = form.address.data
-        aadhar = hash_aadhaar_number(form.aadhar.data)
-        mode = form.mode.data
-        notice = form.notice.data
-        code = form.code.data
-        reg_date = form.date.data
-        submission_time = datetime.now()
-        pay_date = submission_time.date()
-
-        # Generate registration number
-        last_registration_number = student.query.order_by(student.reg_no.desc()).first()
-        new_registration_number = generate_registration_number(last_registration_number)
-        otp = generate_otp()
-        # Send OTP via email
-        send_otp_email(email, otp)
-
-        new_student = student(
-            name=name,
-            course=course,
-            contact=contact,
-            email=email,
-            gender=gender,
-            registration_fee=registration_fee,
-            address=address,
-            aadhar_number=aadhar,
-            mode=mode,
-            notice=notice,
-            code=code,
-            reg_date=reg_date,
-            pay_date=pay_date,
-            reg_no=new_registration_number
-        ) # type: ignore
-
-        session['admission'] = {
-            'name': name,
-            'email': email,
-            'otp': otp,
-            'reg_no': new_registration_number
-        }
-
-
-        db.session.add(new_student)
-        db.session.commit()
-        username = session.get('username', None)
-        chat_id = code
-
-        if form.notice.data == 'email':
-            recipient_email = form.email.data
-            registration_fee = registration_fee
+    if request.method == 'POST':
+        if form.validate_on_submit():
             name = form.name.data
-            reg_no = new_registration_number
-            success, error_message = send_otp_email(recipient_email, otp)
-            if success:
-                return render_template('auth/student_verify_otp.html', otp=otp)
-            else:
-                flash(f"Error sending email: {error_message}", 'error')
+            course = form.course.data
+            contact = form.contact.data
+            email = form.email.data
+            gender = form.gender.data
+            registration_fee = 0 if form.registration_fee.data == 'yes' else 100
+            address = form.address.data
+            aadhar = hash_aadhaar_number(form.aadhar.data)
+            mode = form.mode.data
+            notice = form.notice.data
+            code = form.code.data
+            reg_date = form.date.data
+            submission_time = datetime.now()
+            pay_date = submission_time.date()
 
-        elif form.notice.data == 'telegram':
-            telegram_message = f"Thank You for your Interest in Vedaalay!\n" \
-                            f"-------\n" \
-                            f"Date: {reg_date}\n \n" \
-                            f"Student's Name: {name}\n" \
-                            f"Reg Number: {new_registration_number}\n" \
-                            f"Registration Fee: {registration_fee}\n" \
-                            f"we will be sending all the other details shortly\n" \
-                            f"https://vedaalay.com/wp-content/uploads/2023/04/vedw.png/"
-            success = send_telegram_message(chat_id, text=telegram_message)
-            if not success:
-                flash('Error sending Telegram message', 'error')
-        elif form.notice.data == 'whatsapp':
-            whatsapp_message = f"Thank You for your Interest in Vedaalay!\n" \
-                            f"-------\n" \
-                            f"Date: {reg_date}\n \n" \
-                            f"Student's Name: {name}\n" \
-                            f"Reg Number: {new_registration_number}\n" \
-                            f"Registration Fee: {registration_fee}\n" \
-                            f"Your OTP is {otp}\n" \
-                            f"we will be sending all the other details shortly\n" \
-                            f"https://vedaalay.com/wp-content/uploads/2023/04/vedw.png/"
-            success = send_whatsapp_message(contact, whatsapp_message)
-            if not success:
-                flash("Error sending WhatsApp message", 'error')
+            # Generate registration number
+            last_registration_number = student.query.order_by(student.reg_no.desc()).first()
+            new_registration_number = generate_registration_number(last_registration_number)
+            otp = generate_otp()
+            # Send OTP via email
+            send_otp_email(email, otp)
 
-    else:
-        print('form errors', form.errors)
-        flash('Admission form contains errors', 'error')
-        return render_template('auth/admission.html', form=form)
+            new_student = student(
+                name=name,
+                course=course,
+                contact=contact,
+                email=email,
+                gender=gender,
+                registration_fee=registration_fee,
+                address=address,
+                aadhar_number=aadhar,
+                mode=mode,
+                notice=notice,
+                code=code,
+                reg_date=reg_date,
+                pay_date=pay_date,
+                reg_no=new_registration_number
+            ) # type: ignore
+
+            session['admission'] = {
+                'name': name,
+                'email': email,
+                'otp': otp,
+                'reg_no': new_registration_number
+            }
+
+
+            db.session.add(new_student)
+            db.session.commit()
+            username = session.get('username')
+            chat_id = code
+
+            if form.notice.data == 'email':
+                recipient_email = form.email.data
+                registration_fee = registration_fee
+                name = form.name.data
+                reg_no = new_registration_number
+                success, error_message = send_otp_email(recipient_email, otp)
+                if success:
+                    return render_template('auth/student_verify_otp.html', otp=otp)
+                else:
+                    flash(f"Error sending email: {error_message}", 'error')
+
+            elif form.notice.data == 'telegram':
+                telegram_message = f"Thank You for your Interest in Vedaalay!\n" \
+                                f"-------\n" \
+                                f"Date: {reg_date}\n \n" \
+                                f"Student's Name: {name}\n" \
+                                f"Reg Number: {new_registration_number}\n" \
+                                f"Registration Fee: {registration_fee}\n" \
+                                f"we will be sending all the other details shortly\n" \
+                                f"https://vedaalay.com/wp-content/uploads/2023/04/vedw.png/"
+                success = send_telegram_message(chat_id, text=telegram_message)
+                if not success:
+                    flash('Error sending Telegram message', 'error')
+            elif form.notice.data == 'whatsapp':
+                whatsapp_message = f"Thank You for your Interest in Vedaalay!\n" \
+                                f"-------\n" \
+                                f"Date: {reg_date}\n \n" \
+                                f"Student's Name: {name}\n" \
+                                f"Reg Number: {new_registration_number}\n" \
+                                f"Registration Fee: {registration_fee}\n" \
+                                f"Your OTP is {otp}\n" \
+                                f"we will be sending all the other details shortly\n" \
+                                f"https://vedaalay.com/wp-content/uploads/2023/04/vedw.png/"
+                success = send_whatsapp_message(contact, whatsapp_message)
+                if not success:
+                    flash("Error sending WhatsApp message", 'error')
+
+        else:
+            flash('Admission form contains errors', 'error')
+            return render_template('auth/admission.html', form=form)
+        
     return render_template('auth/admission.html', form=form)
 
 
@@ -198,7 +194,7 @@ def student_verify_otp():
             print('session cleared')
 
             success_message = 'Student added in the database successfully!'
-            return redirect(url_for('auth.fee_coll'))
+            return redirect(url_for('auth.collect_fee, <reg_no>'))
 
         else:
             flash('OTP you entered is incorrect, try again', 'error')
@@ -207,16 +203,3 @@ def student_verify_otp():
     # Handle GET request when the page is initially loaded
     return render_template('auth/student_verify_otp.html')
 
-@auth_bp.route('/webhook', methods=['POST'])
-def webhook():
-    data = request.get_json()
-
-    # Check if the message is a 'start' command
-    if 'message' in data and 'text' in data['message'] and data['message']['text'] == '/start':
-        # Get user ID
-        chat_id = data['message']['chat']['id']
-
-        # Send a welcome message
-        send_telegram_message(chat_id, "Welcome to Vedaalay! Thank you for selecting Telegram. as a preffered method of communication. We will be sending all the other details shortly.")
-
-    return '', 200

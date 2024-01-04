@@ -1,7 +1,7 @@
 from flask_mail import Message
 from flask import current_app, render_template
 from app import mail
-
+from datetime import timedelta
 
 def send_email(subject, recipients, template, **kwargs):
     sender = current_app.config['MAIL_DEFAULT_SENDER']
@@ -27,11 +27,13 @@ def send_otp_email(recipient_email, otp):
         return False, str(e)
 
 
-def send_invoice_email(recipient_email, otp):
+def send_invoice_email(recipient_email, fee_time, reg_no, reg_date, name,  email, address, mode):
     try:
-        subject = 'Verification Code For Registration'
+        end_date = fee_time + timedelta(days=30)
+        subject = 'Invoice for the month of ' + reg_date
         template = 'email/otp.html'  # You need to create this template
-        return send_email(subject, [recipient_email], template, otp=otp)
+        return send_email(subject, [recipient_email], template, end_date=end_date, reg_no=reg_no, reg_date=reg_date, name=name, email=email, address=address, mode=mode)
     except Exception as e:
         print(f"Error sending email: {e}")
         return False, str(e)
+    

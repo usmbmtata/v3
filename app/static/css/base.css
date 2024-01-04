@@ -49,6 +49,14 @@ body {
     background-color: rgba(240, 243, 243, 0.596);
     border-width: 2px;
 }
+
+.form-control.dark-mode{
+    border-radius: 15px;
+    background-color: rgba(0, 0, 0, 0.952);
+    border-width: 2px;
+    color: #f4f4f5;
+}
+
 .alert-danger {
     color: red;
     padding: 10px;

@@ -1,5 +1,6 @@
-const preloaderWrapper = document.querySelector('.preloader-wrapper');
+// script.js
+const loaderWrapper = document.querySelector('.loader-wrapper');
 
 window.addEventListener('load', function() {
-    preloaderWrapper.classList.add('fade-out-animation');
+    loaderWrapper.classList.add('fade-out-animation');
 });

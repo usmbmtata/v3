@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block title %} {{name}}'s Fee Collect Confirmation{% endblock %}
+{% block content %}
+  <div class="container mt-5 p-5 bg-light w-login rounded shadow mb-5">
+    <h1 class="text-center mb-5 mt-5 ">Fee Collection Form</h1>
+
+    <form method="POST" action="{{ url_for('auth.adm_fee', reg_no=student_data.reg_no) }}">
+      {{ form.hidden_tag() }}
+      <div class="row">
+        <div class="col-12 mb-3">
+          {{ form.date.label }}
+          {{ form.date(class_="form-control", placeholder="YYYY-MM-DD") }}
+        </div>
+        <div class="col-12 mb-3">
+          {{ form.month.label }}
+          {{ form.month(class_="form-control") }}
+        </div>
+        <div class="col-12 mb-3">
+          {{ form.type.label }}
+          {{ form.type(class_="form-control") }}
+        </div>
+        <div class="col-12 mb-3">
+          {{ form.mode.label }}
+          {{ form.mode(class_="form-control") }}
+        </div>
+        <div class="col-12 mb-3">
+          {{ form.slot.label }}
+          {{ form.slot(class_="form-control") }}
+        </div>
+      </div>
+    
+      <button type="submit" class="btn btn-dark mt-3">Submit</button>
+    </form>
+</div>
+{% endblock %}

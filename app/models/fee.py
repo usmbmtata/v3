@@ -13,4 +13,4 @@ class fee_coll(db.Model):
     rate = db.Column(db.Float)
     type = db.Column(db.String(20))
     slot = db.Column(db.String(20))
-    status = db.Column(db.String(3))
+    status = db.Column(db.String, default='no')

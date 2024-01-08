@@ -1,18 +1,15 @@
-from flask import Flask, request
+from flask import Flask, request, jsonify
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 from app.utils.telegram_utils import send_telegram_message
 from config import Config
 
 app = Flask(__name__)
-
-bot = Updater(Config.telegram_bot)
-dispatcher = bot.dispatcher
-
+updater = Updater(Config.telegram_bot)
 
 def start_command(update, context):
     chat_id = update.effective_chat.id
     welcome_message = "Welcome to Vedaalay!\n\nType /otp to get a one-time OTP for communication.\nType /help for available commands."
-    send_telegram_message(chat_id, welcome_message)
+    context.bot.send_message(chat_id=chat_id, text=welcome_message)
 
 def otp_command(update, context):
     chat_id = update.effective_chat.id
@@ -35,14 +32,30 @@ def handle_payment_input(update, context):
 def stop_command(update, context):
     chat_id = update.effective_chat.id
     send_telegram_message(chat_id, "Goodbye!")
+    updater.stop()
 
 def handle_text(update, context):
     # Process text messages
     chat_id = update.effective_chat.id
     text = update.message.text
     # Stop the bot
-    Updater.stop_polling()
+    updater.stop()
+
+@app.route('/webhook', methods=['POST'])
+def webhook():
+    json_data = request.get_json()
+    update = updater.update_queue.put(Update.de_json(json_data, updater.bot))  # type: ignore
+    return jsonify({'status': 'ok'})
 
 if __name__ == '__main__':
-    bot.start_polling()
+    # Register command handlers
+    dp = updater.dispatcher
+    dp.add_handler(CommandHandler("start", start_command))
+    dp.add_handler(CommandHandler("otp", otp_command))
+    dp.add_handler(CommandHandler("lastpayment", last_payment_command))
+    dp.add_handler(MessageHandler(Filters.text & ~Filters.command, handle_payment_input))
+    dp.add_handler(CommandHandler("stop", stop_command))
+    dp.add_handler(MessageHandler(Filters.text, handle_text))
+
+    # Start the Flask app
     app.run(debug=True)

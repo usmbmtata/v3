@@ -1,18 +1,23 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session
 from flask_bcrypt import Bcrypt
+from wtforms import Form
 from app.models.admin import Admin
 from app import db
 import logging
 from app.utils.email_utils import send_otp_email
 from app.utils.otp_utils import generate_otp
+from app.models.fee import fee_coll
 import logging
-from app.forms.user_form import LoginForm, admissionForm
+from app.utils.rate_utils import get_rate
+from app.forms.user_form import LoginForm, admissionForm, otp_verify, FeeCollForm
 from app.utils.telegram_utils import send_telegram_message
 from app.utils.hash_utils import hash_aadhaar_number
 from app.utils.registration_utils import generate_registration_number
 from datetime import datetime, date
+from app.utils.invoice_utils import generate_invoice_number
 from app.models.student import student
 from app.utils.whatsapp_utils import send_whatsapp_message
+from app.utils.email_utils import send_invoice_email
 
 auth_bp = Blueprint('auth', __name__)
 bcrypt = Bcrypt()
@@ -87,6 +92,7 @@ def admission():
             email = form.email.data
             gender = form.gender.data
             registration_fee = 0 if form.registration_fee.data == 'yes' else 100
+            reg_fee = registration_fee
             address = form.address.data
             aadhar = hash_aadhaar_number(form.aadhar.data)
             mode = form.mode.data
@@ -100,8 +106,8 @@ def admission():
             last_registration_number = student.query.order_by(student.reg_no.desc()).first()
             new_registration_number = generate_registration_number(last_registration_number)
             otp = generate_otp()
+            print(otp)
             # Send OTP via email
-            send_otp_email(email, otp)
 
             new_student = student(
                 name=name,
@@ -126,8 +132,6 @@ def admission():
                 'otp': otp,
                 'reg_no': new_registration_number
             }
-
-
             db.session.add(new_student)
             db.session.commit()
             username = session.get('username')
@@ -140,7 +144,7 @@ def admission():
                 reg_no = new_registration_number
                 success, error_message = send_otp_email(recipient_email, otp)
                 if success:
-                    return render_template('auth/student_verify_otp.html', otp=otp)
+                    return redirect(url_for('auth.student_verify_otp'))
                 else:
                     flash(f"Error sending email: {error_message}", 'error')
 
@@ -169,7 +173,6 @@ def admission():
                 success = send_whatsapp_message(contact, whatsapp_message)
                 if not success:
                     flash("Error sending WhatsApp message", 'error')
-
         else:
             flash('Admission form contains errors', 'error')
             return render_template('auth/admission.html', form=form)
@@ -179,27 +182,117 @@ def admission():
 
 @auth_bp.route('/student_verify_otp', methods=['GET', 'POST'])
 def student_verify_otp():
+    form = otp_verify()
+    username = session.get('username')
     admission = session.get('admission', {})
     name = admission.get('name')
     otp = admission.get('otp')
     reg_no = admission.get('reg_no')
     email = admission.get('email')
-
     if request.method == 'POST':
         entered_otp = request.form.get('otp')
         stored_otp = otp
-
         if entered_otp == stored_otp:
+            session.pop('username', None)
             session.clear()
+            session['username'] = username
             print('session cleared')
-
-            success_message = 'Student added in the database successfully!'
-            return redirect(url_for('auth.collect_fee, <reg_no>'))
-
+            print(session.get('username'))
+            flash("Student's data added in the database successfully!", 'success')
+            return redirect(url_for('auth.adm_fee', reg_no=reg_no))
         else:
             flash('OTP you entered is incorrect, try again', 'error')
-            return render_template('auth/student_verify_otp.html', otp=stored_otp, name=name, reg_no=reg_no, email=email)
+            return render_template('auth/student_verify_otp.html', name=name, reg_no=reg_no, email=email, otp=otp, form=form)
+    return render_template('auth/student_verify_otp.html', name=name, reg_no=reg_no, email=email, otp=otp, form=form)
 
-    # Handle GET request when the page is initially loaded
-    return render_template('auth/student_verify_otp.html')
 
+
+@auth_bp.route('/adm_fee/<reg_no>', methods=['POST', 'GET'])
+def adm_fee(reg_no):
+    fee_coll_form = FeeCollForm()
+    print('working till form declaration')
+    student_data = student.query.filter_by(reg_no=reg_no).first()
+    print('working tillstudent_data', student_data)
+
+    if not student_data:
+        flash(f'Student with registration number {reg_no} not found.', 'error')
+        return render_template('errors/error.html')
+
+    if fee_coll_form.validate_on_submit():
+        print('working till form validation')
+        try:
+            # Generate invoice number
+            invoice_number = generate_invoice_number(fee_coll.query.order_by(fee_coll.id.desc()).first().invoice_number)  # type: ignore
+            print('invoice_number', invoice_number)
+            # Get rate based on form data
+            type = fee_coll_form.type.data
+            date_str = fee_coll_form.date.data
+            print('date_str', date_str)
+            print('type', type)
+            cal_rate = get_rate(type, date_str)
+            print('working till rate calculation')
+            user=session.get('username')
+            print('user', user)
+            # Create a FeeColl instance
+            fee_data = fee_coll(
+                invoice_number=invoice_number,
+                reg_no=reg_no,
+                fee_time = date_str,
+                payment_time=datetime.now(),
+                username=user,
+                name=student_data.name,
+                contact=student_data.contact,
+                month=fee_coll_form.month.data,
+                rate=cal_rate,
+                type=type,
+                slot=fee_coll_form.slot.data,
+            ) # type: ignore
+            # Add and commit to the database
+            db.session.add(fee_data)
+            db.session.commit()
+            print('working till fee data')
+            # Get chat ID and notice preferences from student
+            chat_id = student_data.code #type: ignore
+            notice_preference = student_data.notice
+
+            # Send notice based on preference
+            if notice_preference == 'email':
+                recipient_email = student.email
+                success, error_message = send_invoice_email(recipient_email, student_data, fee_data) # type: ignore
+                if success:
+                    flash('Email sent successfully!', 'success')
+                else:
+                    flash(f"Error sending email: {error_message}", 'error')
+            elif notice_preference == 'telegram':
+                telegram_message = f"Thank You for your Interest in Vedaalay!\n" \
+                                    f"-------\n" \
+                                    f"Date: {fee_data.payment_time}\n \n" \
+                                    f"Student's Name: {fee_data.name}\n" \
+                                    f"Reg Number: {fee_data.reg_no}\n" \
+                                    f"We will be sending all the other details shortly\n" \
+                                    f"https://vedaalay.com/wp-content/uploads/2023/04/vedw.png/"
+                success = send_telegram_message(chat_id, text=telegram_message)
+                if success:
+                    flash('Telegram message sent successfully!', 'success')
+                else:
+                    flash('Error sending Telegram message', 'error')
+            elif notice_preference == 'whatsapp':
+                whatsapp_message = f"Thank You for your Interest in Vedaalay!\n" \
+                                    f"-------\n" \
+                                    f"Date: {fee_data.payment_time}\n \n" \
+                                    f"Student's Name: {fee_data.name}\n" \
+                                    f"Reg Number: {fee_data.reg_no}\n" \
+                                    f"We will be sending all the other details shortly\n" \
+                                    f"https://vedaalay.com/wp-content/uploads/2023/04/vedw.png/"
+                success = send_whatsapp_message(student_data.contact, whatsapp_message)
+                if success:
+                    flash('WhatsApp message sent successfully!', 'success')
+                else:
+                    flash('Error sending WhatsApp message', 'error')
+
+            flash('Fee collected successfully!', 'success')
+            return redirect(url_for('fee_coll.search'))
+
+        except Exception as e:
+            flash(f'Error processing fee collection: {str(e)}', 'error')
+    return render_template('auth/adm_fee.html', form=fee_coll_form, student_data=student_data)

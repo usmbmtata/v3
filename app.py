@@ -45,4 +45,4 @@ app = create_app()
 
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0')  # For development, set debug to False in production
+    app.run(debug=True)

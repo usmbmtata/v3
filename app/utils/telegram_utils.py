@@ -3,7 +3,6 @@ from telegram.error import TelegramError
 from flask import current_app
 from app.config import Config
 
-
 def send_telegram_message(chat_id, text):
     try:
         bot_token = Config.telegram_bot

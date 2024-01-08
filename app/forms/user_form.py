@@ -37,3 +37,7 @@ class FeeCollForm(FlaskForm):
     mode = SelectField('Mode', choices=[('cash', 'Cash'), ('online', 'Online')], validators=[DataRequired()])
     slot = SelectField('Slot', choices=[('morning', 'Morning'), ('afternoon', 'Afternoon'), ('evening', 'Evening'), ('night', 'Night'), ('reserved', 'Reserved')], validators=[DataRequired()])
     submit = SubmitField('Submit')
+
+class otp_verify(FlaskForm):
+    otp = StringField('OTP', validators=[Length(min=6, max=6)], render_kw={"type": "text", "pattern": "[0-9]*", "placeholder": "Enter OTP"})
+    submit = SubmitField('Submit')
